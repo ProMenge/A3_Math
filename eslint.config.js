@@ -30,4 +30,13 @@ export default [
       "react/jsx-uses-react": "off",
     },
   },
+  {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "parser": "flow"
+      }
+    ]
+  }
 ];
