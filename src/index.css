@@ -1,2 +1,6 @@
 /* @type postcss */
 @import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
