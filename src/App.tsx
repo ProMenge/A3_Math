@@ -1,13 +1,12 @@
 import "./App.css";
-import Button from "./components/button/button";
-import { GlobalCss } from "./styles";
+import Hero from "./components/hero/hero";
+import Header from "./components/header/header";
 
 function App() {
   return (
     <>
-      <GlobalCss />
-      <h1>Teste</h1>
-      <Button></Button>
+      <Header></Header>
+      <Hero></Hero>
     </>
   );
 }
