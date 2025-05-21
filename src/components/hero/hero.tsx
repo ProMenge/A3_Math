@@ -5,7 +5,7 @@ import "./styles.css";
 const Hero = () => {
   return (
     <motion.section
-      className="bg-white lg:grid h-screen lg:place-content-center dark:bg-slate-900"
+      className="bg-white lg:grid h-screen block lg:place-content-center dark:bg-slate-900"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
@@ -15,7 +15,7 @@ const Hero = () => {
         <div className="mx-auto max-w-prose text-center">
           <h1 className="text-4xl font-bold leading-normal text-slate-900 dark:text-slate-50 sm:text-5xl">
             Edite suas imagens na
-            <strong className="text-sky-600"> velocidade da luz </strong>
+            <strong className="text-sky-600"> velocidade da luz</strong>
           </h1>
 
           <p className="mt-4 text-base text-pretty text-slate-700 dark:text-slate-50 sm:text-lg/relaxed">

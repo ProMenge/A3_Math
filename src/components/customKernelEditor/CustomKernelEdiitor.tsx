@@ -21,7 +21,7 @@ const CustomKernelEditor: React.FC<Props> = ({ size = 3, onApply }) => {
   };
 
   return (
-    <div className="text-center mt-10">
+    <div className="text-center flex mt-10 bg-white dark:bg-slate-900">
       <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-4">
         Matriz personalizada ({size}x{size})
       </h3>

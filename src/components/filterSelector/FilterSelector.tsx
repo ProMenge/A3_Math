@@ -68,7 +68,7 @@ const FilterSelector: React.FC<FilterSelectorProps> = ({ onApply }) => {
   const selected = filterOptions.find((f) => f.name === selectedFilter);
 
   return (
-    <div className="text-center mt-10">
+    <div className="text-center flex mt-10 bg-white dark:bg-slate-900">
       <label
         htmlFor="filter"
         className="block mb-2 text-slate-700 dark:text-white font-medium"

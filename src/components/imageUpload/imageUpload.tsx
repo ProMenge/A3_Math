@@ -6,6 +6,7 @@ import FilterSelector from "../filterSelector/FilterSelector";
 
 const ImageUpload = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [imageNames, setImageNames] = useState<string[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>("identity");
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -16,6 +17,11 @@ const ImageUpload = () => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImageSrc(imageUrl);
+    }
+    const files = e.target.files;
+    if (files) {
+      const names = Array.from(files).map((file) => file.name);
+      setImageNames(names);
     }
   };
 
@@ -99,9 +105,9 @@ const ImageUpload = () => {
   return (
     <section
       id="upload"
-      className="h-screen w-full flex items-center bg-slate-50 dark:bg-slate-800 px-4"
+      className="w-full flex items-center bg-slate-50 dark:bg-slate-900 px-4 py-20"
     >
-      <div className="max-w-4xl mx-auto text-center">
+      <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
         <motion.h2
           className="text-3xl font-bold text-slate-900 dark:text-white mb-6"
           initial={{ opacity: 0, y: 20 }}
@@ -123,12 +129,42 @@ const ImageUpload = () => {
           matrizes.
         </motion.p>
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="block mx-auto mb-6 text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-sky-600 file:text-white file:font-semibold hover:file:bg-sky-700 cursor-pointer"
-        />
+        <motion.label
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          htmlFor="File"
+          className="block rounded border border-slate-300 bg-white p-4 text-slate-900 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+        >
+          <div className="flex items-center justify-center gap-4">
+            <span className="font-medium dark:text-white">
+              {imageNames.length > 0
+                ? `${imageNames.length} arquivo(s) selecionado(s)`
+                : "Carregue sua imagem"}
+            </span>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"
+              />
+            </svg>
+          </div>
+
+          <input multiple type="file" id="File" onChange={handleImageChange} className="sr-only" />
+        </motion.label>
+
 
         {imageSrc && (
           <>
@@ -142,9 +178,8 @@ const ImageUpload = () => {
               </p>
               <canvas
                 ref={canvasRef}
-                className="rounded-md shadow-md max-w-full max-h-[800px]"
+                className="rounded-md shadow-md w-full max-w-[600px] h-auto"
               />
-
               <img
                 ref={imageRef}
                 src={imageSrc}
