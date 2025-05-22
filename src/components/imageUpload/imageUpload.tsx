@@ -3,7 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { kernels } from "../../utils/kernels";
 import CustomKernelEditor from "../customKernelEditor/CustomKernelEditor";
 import FilterSelector from "../filterSelector/FilterSelector";
-import Tabs from "../tabs/tabs";
+import Tabs from "../tabs/Tabs";
+import RgbAdjuster from "../RgbAdjuster/RgbAdjuster";
 
 const ImageUpload = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -11,7 +12,13 @@ const ImageUpload = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("identity");
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const originalCanvasRef = useRef<HTMLCanvasElement>(null);
   const [customKernel, setCustomKernel] = useState<number[][] | null>(null);
+  const [intensity, setIntensity] = useState<number>(100);
+  const [rgbFactors, setRgbFactors] = useState<[number, number, number]>([
+    1, 1, 1,
+  ]);
+  const [applyRgb, setApplyRgb] = useState(false);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -30,15 +37,50 @@ const ImageUpload = () => {
     setSelectedFilter(filterName);
   };
 
-  useEffect(() => {
-    if (!imageRef.current || !canvasRef.current || !imageSrc) return;
+  const handleRemoveFilter = () => {
+    if (!imageRef.current || !canvasRef.current) return;
 
     const image = imageRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const maxWidth = 600;
+    const maxHeight = 600;
+
+    let scale = 1;
+    if (image.width > maxWidth || image.height > maxHeight) {
+      const scaleX = maxWidth / image.width;
+      const scaleY = maxHeight / image.height;
+      scale = Math.min(scaleX, scaleY);
+    }
+
+    const newWidth = image.width * scale;
+    const newHeight = image.height * scale;
+
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    ctx.drawImage(image, 0, 0, newWidth, newHeight);
+
+    // Opcional: resetar seleção
+    setSelectedFilter("identity");
+    setCustomKernel(null);
+  };
+
+  useEffect(() => {
+    if (!canvasRef.current || !originalCanvasRef.current || !imageSrc) return;
+
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.src = imageSrc;
+
     image.onload = () => {
+      const canvas = canvasRef.current!;
+      const originalCanvas = originalCanvasRef.current!;
+      const ctx = canvas.getContext("2d")!;
+      const oCtx = originalCanvas.getContext("2d")!;
+
       const maxWidth = 600;
       const maxHeight = 600;
 
@@ -52,19 +94,59 @@ const ImageUpload = () => {
       const newWidth = image.width * scale;
       const newHeight = image.height * scale;
 
+      // Desenha imagem original
+      originalCanvas.width = newWidth;
+      originalCanvas.height = newHeight;
+      oCtx.drawImage(image, 0, 0, newWidth, newHeight);
+
+      // Aplica filtro
       canvas.width = newWidth;
       canvas.height = newHeight;
-
       ctx.drawImage(image, 0, 0, newWidth, newHeight);
+
       const imageData = ctx.getImageData(0, 0, newWidth, newHeight);
 
-      const kernel = customKernel ?? kernels[selectedFilter];
-      const filtered = applyConvolution(imageData, kernel);
-      ctx.putImageData(filtered, 0, 0);
-    };
+      const baseKernel = customKernel ?? kernels[selectedFilter];
+      const identity = kernels["identity"];
 
-    image.src = imageSrc;
-  }, [selectedFilter, imageSrc, customKernel]);
+      const resizedIdentity = baseKernel.map((row, i) =>
+        row.map((_, j) => identity[i]?.[j] ?? 0),
+      );
+
+      const kernel = interpolateKernels(
+        resizedIdentity,
+        baseKernel,
+        intensity / 100,
+      );
+      let resultData = applyConvolution(imageData, kernel);
+
+      if (applyRgb) {
+        resultData = applyRgbAdjustment(resultData, ...rgbFactors);
+        setApplyRgb(true);
+      }
+
+      ctx.putImageData(resultData, 0, 0);
+    };
+  }, [selectedFilter, imageSrc, customKernel, intensity, applyRgb, rgbFactors]);
+
+  const interpolateKernels = (
+    k1: number[][],
+    k2: number[][],
+    factor: number,
+  ): number[][] => {
+    const result: number[][] = [];
+
+    for (let i = 0; i < k1.length; i++) {
+      result[i] = [];
+      for (let j = 0; j < k1[i].length; j++) {
+        const v1 = k1[i][j];
+        const v2 = k2[i][j] ?? 0;
+        result[i][j] = v1 * (1 - factor) + v2 * factor;
+      }
+    }
+
+    return result;
+  };
 
   const applyConvolution = (imageData: ImageData, kernel: number[][]) => {
     const { width, height, data } = imageData;
@@ -101,6 +183,42 @@ const ImageUpload = () => {
     }
 
     return output;
+  };
+
+  const applyRgbAdjustment = (
+    imageData: ImageData,
+    rFactor: number,
+    gFactor: number,
+    bFactor: number,
+  ) => {
+    const { data } = imageData;
+
+    for (let i = 0; i < data.length; i += 4) {
+      data[i] = Math.min(255, data[i] * rFactor); // Red
+      data[i + 1] = Math.min(255, data[i + 1] * gFactor); // Green
+      data[i + 2] = Math.min(255, data[i + 2] * bFactor); // Blue
+    }
+
+    return imageData;
+  };
+
+  const handleApplyRgb = (r: number, g: number, b: number) => {
+    setRgbFactors([r, g, b]);
+    setApplyRgb(true);
+  };
+
+  const handleResetRgb = () => {
+    setRgbFactors([1, 1, 1]);
+    setApplyRgb(true); // força reprocessamento
+  };
+
+  const handleDownload = () => {
+    if (!canvasRef.current) return;
+
+    const link = document.createElement("a");
+    link.download = "imagem-filtrada.png";
+    link.href = canvasRef.current.toDataURL("image/png");
+    link.click();
   };
 
   return (
@@ -163,13 +281,18 @@ const ImageUpload = () => {
             </svg>
           </div>
 
-          <input multiple type="file" id="File" onChange={handleImageChange} className="sr-only" />
+          <input
+            multiple
+            type="file"
+            id="File"
+            onChange={handleImageChange}
+            className="sr-only"
+          />
         </motion.label>
-
 
         {imageSrc && (
           <>
-          <div className="flex gap-2 my-10"></div>
+            <div className="flex gap-2 my-10"></div>
             <Tabs
               tabs={[
                 {
@@ -178,26 +301,76 @@ const ImageUpload = () => {
                 },
                 {
                   label: "RGB",
-                  content: <p className="dark:text-slate-50">A ser criado.</p>,
+                  content: (
+                    <RgbAdjuster
+                      onApply={handleApplyRgb}
+                      onReset={handleResetRgb}
+                    />
+                  ),
                 },
                 {
                   label: "Kernel Customizado",
-                  content: <CustomKernelEditor onApply={(matrix) => setCustomKernel(matrix)} />,
+                  content: (
+                    <CustomKernelEditor
+                      onApply={(matrix) => setCustomKernel(matrix)}
+                    />
+                  ),
                 },
               ]}
             />
 
+            <div className="mt-6 w-full max-w-md mx-auto text-center">
+              <label className="block mb-2 font-medium text-slate-700 dark:text-slate-200">
+                Intensidade do filtro: {intensity}%
+              </label>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={intensity}
+                onChange={(e) => setIntensity(Number(e.target.value))}
+                className="w-full accent-sky-600"
+              />
+            </div>
+            <div className="mt-4">
+              <button
+                onClick={handleRemoveFilter}
+                className="px-5 py-2 rounded-md bg-red-500 text-white font-semibold hover:bg-red-600 transition"
+              >
+                Remover Filtro
+              </button>
+            </div>
+
             <div className="my-10 flex justify-center items-center gap-6">
-              <canvas
-                ref={canvasRef}
-                className="rounded-md shadow-md w-full max-w-[600px] h-auto"
-              />
-              <img
-                ref={imageRef}
-                src={imageSrc}
-                alt="original"
-                className="hidden my-10"
-              />
+              {/* Canvas original */}
+              <div className="flex flex-col items-center">
+                <p className="mb-2 text-slate-600 dark:text-slate-300 text-sm">
+                  Original
+                </p>
+                <canvas
+                  ref={originalCanvasRef}
+                  className="rounded-md shadow-md w-full max-w-[600px] h-auto"
+                />
+              </div>
+
+              {/* Canvas filtrado */}
+              <div className="flex flex-col items-center">
+                <p className="mb-2 text-slate-600 dark:text-slate-300 text-sm">
+                  Com Filtro
+                </p>
+                <canvas
+                  ref={canvasRef}
+                  className="rounded-md shadow-md w-full max-w-[600px] h-auto"
+                />
+              </div>
+            </div>
+            <div className="mt-6 pb-4">
+              <button
+                onClick={handleDownload}
+                className="px-5 py-2 rounded-md bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+              >
+                Baixar imagem com filtro
+              </button>
             </div>
           </>
         )}
