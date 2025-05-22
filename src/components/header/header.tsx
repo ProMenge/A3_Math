@@ -1,5 +1,4 @@
 import Button from "../button/button";
-import "./styles.css";
 
 const Header = () => {
   return (
@@ -19,10 +18,14 @@ const Header = () => {
 
           <div className="flex items-center gap-4">
             <div className="sm:flex sm:gap-4">
-              <Button variant="primary">Editar</Button>
+              <Button variant="primary">
+                <a href="#upload">Editar</a>
+              </Button>
 
               <div className="hidden sm:flex">
-                <Button variant="light">Sobre Nós</Button>
+                <Button variant="light">
+                  <a href="#upload">Sobre nós</a>
+                </Button>
               </div>
             </div>
           </div>

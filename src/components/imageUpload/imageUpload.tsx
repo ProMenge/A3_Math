@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { kernels } from "../../utils/kernels";
-import CustomKernelEditor from "../customKernelEditor/CustomKernelEdiitor";
+import CustomKernelEditor from "../customKernelEditor/CustomKernelEditor";
 import FilterSelector from "../filterSelector/FilterSelector";
+import Tabs from "../tabs/tabs";
 
 const ImageUpload = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -105,9 +106,9 @@ const ImageUpload = () => {
   return (
     <section
       id="upload"
-      className="w-full flex items-center bg-slate-50 dark:bg-slate-900 px-4 py-20"
+      className="w-full flex items-center bg-slate-50 dark:bg-slate-900 px-4 py-20 my-10"
     >
-      <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
+      <div className="max-w-4xl mx-auto text-center flex flex-col items-center max-h-screen">
         <motion.h2
           className="text-3xl font-bold text-slate-900 dark:text-white mb-6"
           initial={{ opacity: 0, y: 20 }}
@@ -137,7 +138,7 @@ const ImageUpload = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           htmlFor="File"
-          className="block rounded border border-slate-300 bg-white p-4 text-slate-900 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+          className="block rounded border border-slate-300 bg-white p-4 my-10 text-slate-900 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
         >
           <div className="flex items-center justify-center gap-4">
             <span className="font-medium dark:text-white">
@@ -168,14 +169,25 @@ const ImageUpload = () => {
 
         {imageSrc && (
           <>
-            <FilterSelector onApply={handleApplyFilter} />
+          <div className="flex gap-2 my-10"></div>
+            <Tabs
+              tabs={[
+                {
+                  label: "Filtros",
+                  content: <FilterSelector onApply={handleApplyFilter} />,
+                },
+                {
+                  label: "RGB",
+                  content: <p className="dark:text-slate-50">A ser criado.</p>,
+                },
+                {
+                  label: "Kernel Customizado",
+                  content: <CustomKernelEditor onApply={(matrix) => setCustomKernel(matrix)} />,
+                },
+              ]}
+            />
 
-            <CustomKernelEditor onApply={(matrix) => setCustomKernel(matrix)} />
-
-            <div className="mt-10 flex justify-center flex-col items-center gap-6">
-              <p className="text-slate-700 dark:text-slate-200">
-                Resultado com filtro:
-              </p>
+            <div className="my-10 flex justify-center items-center gap-6">
               <canvas
                 ref={canvasRef}
                 className="rounded-md shadow-md w-full max-w-[600px] h-auto"
@@ -184,7 +196,7 @@ const ImageUpload = () => {
                 ref={imageRef}
                 src={imageSrc}
                 alt="original"
-                className="hidden"
+                className="hidden my-10"
               />
             </div>
           </>

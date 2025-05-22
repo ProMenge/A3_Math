@@ -7,7 +7,7 @@ interface FilterSelectorProps {
 const filterOptions = [
   {
     name: "identity",
-    label: "Sem Filtro",
+    label: "Sem Filtros",
     description: "Não altera a imagem.",
   },
   {
@@ -65,41 +65,46 @@ const filterOptions = [
 const FilterSelector: React.FC<FilterSelectorProps> = ({ onApply }) => {
   const [selectedFilter, setSelectedFilter] = useState("identity");
 
-  const selected = filterOptions.find((f) => f.name === selectedFilter);
-
   return (
-    <div className="text-center flex mt-10 bg-white dark:bg-slate-900">
-      <label
-        htmlFor="filter"
-        className="block mb-2 text-slate-700 dark:text-white font-medium"
-      >
-        Selecione um filtro:
-      </label>
-      <select
-        id="filter"
-        value={selectedFilter}
-        onChange={(e) => setSelectedFilter(e.target.value)}
-        className="rounded-md border border-slate-300 px-4 py-2 text-slate-700 dark:bg-slate-700 dark:text-white"
-      >
+    <div className="w-full max-w-2xl mx-auto my-10 px-4 bg-white dark:bg-slate-900 rounded-md">
+      <fieldset className="space-y-2">
+        <legend className="text-lg font-semibold text-slate-800 dark:text-sky-50 mb-4">
+          Escolha um filtro:
+        </legend>
+
         {filterOptions.map((filter) => (
-          <option key={filter.name} value={filter.name}>
-            {filter.label}
-          </option>
+          <label
+            key={filter.name}
+            className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-4 py-3 border rounded-lg cursor-pointer transition ${
+              selectedFilter === filter.name
+                ? "border-sky-500 bg-sky-50 dark:bg-sky-900"
+                : "border-slate-200 dark:border-slate-700"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="filter"
+                value={filter.name}
+                checked={selectedFilter === filter.name}
+                onChange={() => setSelectedFilter(filter.name)}
+                className="sr-only"
+              />
+              <span className="font-medium text-slate-800 dark:text-white">{filter.label}</span>
+            </div>
+            <span className="text-sm text-slate-500 dark:text-slate-300">{filter.description}</span>
+          </label>
         ))}
-      </select>
+      </fieldset>
 
-      <button
-        onClick={() => onApply(selectedFilter)}
-        className="ml-4 px-5 py-2 rounded-md bg-sky-600 text-white font-semibold hover:bg-sky-700 transition"
-      >
-        Aplicar Filtro
-      </button>
-
-      {selected && (
-        <p className="mt-4 text-sm text-slate-600 dark:text-slate-300 italic">
-          {selected.description}
-        </p>
-      )}
+      <div className="mt-6 text-center">
+        <button
+          onClick={() => onApply(selectedFilter)}
+          className="px-6 py-2 rounded-md bg-sky-600 text-white font-semibold hover:bg-sky-700 transition"
+        >
+          Aplicar Filtro
+        </button>
+      </div>
     </div>
   );
 };

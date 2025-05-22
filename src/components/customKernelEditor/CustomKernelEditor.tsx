@@ -21,13 +21,13 @@ const CustomKernelEditor: React.FC<Props> = ({ size = 3, onApply }) => {
   };
 
   return (
-    <div className="text-center flex mt-10 bg-white dark:bg-slate-900">
+    <div className="text-center flex flex-col mt-10 bg-white dark:bg-slate-900">
       <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-4">
         Matriz personalizada ({size}x{size})
       </h3>
 
       <div
-        className="inline-grid"
+        className="inline-grid m-auto"
         style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}
       >
         {matrix.map((row, rowIndex) =>

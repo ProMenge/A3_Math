@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import Button from "../button/button";
-import "./styles.css";
 
 const Hero = () => {
   return (
