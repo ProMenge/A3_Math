@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { kernels } from "../../utils/kernels";
+import { kernels } from "../../utils/Kernels";
 import CustomKernelEditor from "../customKernelEditor/CustomKernelEditor";
 import FilterSelector from "../filterSelector/FilterSelector";
 import Tabs from "../tabs/Tabs";
@@ -292,7 +292,7 @@ const ImageUpload = () => {
 
         {imageSrc && (
           <>
-            <div className="flex gap-2 my-10"></div>
+            <div className="flex gap-2 my-5"></div>
             <Tabs
               tabs={[
                 {

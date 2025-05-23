@@ -15,7 +15,7 @@ const RgbAdjuster: React.FC<Props> = ({ onApply, onReset }) => {
   };
 
   return (
-    <div className="text-center px-4">
+    <div className="text-center py-4 px-4">
       <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-6">
         Ajuste de Canais RGB
       </h3>

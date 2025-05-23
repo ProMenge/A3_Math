@@ -1,4 +1,4 @@
-import Button from "../button/button";
+import Button from "../button/Button";
 
 const Header = () => {
   return (
@@ -8,11 +8,8 @@ const Header = () => {
           <div className="md:flex md:items-center md:gap-12">
             <a className="block text-sky-600 dark:text-sky-600" href="#">
               <span className="sr-only">Home</span>
-              <img
-                src="./src/assets/Ocular.png"
-                alt="logoOcular"
-                className="h-8"
-              />
+              <img src="./src/assets/Ocular.png" alt="logoOcular" className="h-8 block dark:hidden" />
+              <img src="./src/assets/OcularWhite.png" alt="logoOcularWhite" className="h-8 hidden dark:block" />
             </a>
           </div>
 
