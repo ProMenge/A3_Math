@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { kernels } from "../../utils/Kernels";
+import { kernels } from "../../utils/kernels";
 import CustomKernelEditor from "../customKernelEditor/CustomKernelEditor";
 import FilterSelector from "../filterSelector/FilterSelector";
-import Tabs from "../tabs/Tabs";
 import RgbAdjuster from "../RgbAdjuster/RgbAdjuster";
+import Tabs from "../tabs/Tabs";
 
 const ImageUpload = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -38,34 +38,41 @@ const ImageUpload = () => {
   };
 
   const handleRemoveFilter = () => {
-    if (!imageRef.current || !canvasRef.current) return;
+    if (!canvasRef.current) return;
 
-    const image = imageRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx || !imageSrc) return;
 
-    const maxWidth = 600;
-    const maxHeight = 600;
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.src = imageSrc;
 
-    let scale = 1;
-    if (image.width > maxWidth || image.height > maxHeight) {
-      const scaleX = maxWidth / image.width;
-      const scaleY = maxHeight / image.height;
-      scale = Math.min(scaleX, scaleY);
-    }
+    image.onload = () => {
+      const maxWidth = 600;
+      const maxHeight = 600;
 
-    const newWidth = image.width * scale;
-    const newHeight = image.height * scale;
+      let scale = 1;
+      if (image.width > maxWidth || image.height > maxHeight) {
+        const scaleX = maxWidth / image.width;
+        const scaleY = maxHeight / image.height;
+        scale = Math.min(scaleX, scaleY);
+      }
 
-    canvas.width = newWidth;
-    canvas.height = newHeight;
+      const newWidth = image.width * scale;
+      const newHeight = image.height * scale;
 
-    ctx.drawImage(image, 0, 0, newWidth, newHeight);
+      canvas.width = newWidth;
+      canvas.height = newHeight;
 
-    // Opcional: resetar seleção
-    setSelectedFilter("identity");
-    setCustomKernel(null);
+      ctx.drawImage(image, 0, 0, newWidth, newHeight);
+
+      // Resetar filtro e RGB
+      setSelectedFilter("identity");
+      setCustomKernel(null);
+      setRgbFactors([1, 1, 1]);
+      setIntensity(100);
+    };
   };
 
   useEffect(() => {
@@ -193,10 +200,16 @@ const ImageUpload = () => {
   ) => {
     const { data } = imageData;
 
+    // Interpola os fatores com base na intensidade
+    const mix = intensity / 100;
+    const r = 1 * (1 - mix) + rFactor * mix;
+    const g = 1 * (1 - mix) + gFactor * mix;
+    const b = 1 * (1 - mix) + bFactor * mix;
+
     for (let i = 0; i < data.length; i += 4) {
-      data[i] = Math.min(255, data[i] * rFactor); // Red
-      data[i + 1] = Math.min(255, data[i + 1] * gFactor); // Green
-      data[i + 2] = Math.min(255, data[i + 2] * bFactor); // Blue
+      data[i] = Math.min(255, data[i] * r); // Red
+      data[i + 1] = Math.min(255, data[i + 1] * g); // Green
+      data[i + 2] = Math.min(255, data[i + 2] * b); // Blue
     }
 
     return imageData;
