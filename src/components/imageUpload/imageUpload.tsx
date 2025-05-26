@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { kernels } from "../../utils/kernels";
+import { kernels } from "../../utils/Kernels";
 import CustomKernelEditor from "../customKernelEditor/CustomKernelEditor";
 import FilterSelector from "../filterSelector/FilterSelector";
 import RgbAdjuster from "../RgbAdjuster/RgbAdjuster";
@@ -305,85 +305,74 @@ const ImageUpload = () => {
 
         {imageSrc && (
           <>
-            <div className="flex gap-2 my-5"></div>
-            <Tabs
-              tabs={[
-                {
-                  label: "Filtros",
-                  content: <FilterSelector onApply={handleApplyFilter} />,
-                },
-                {
-                  label: "RGB",
-                  content: (
-                    <RgbAdjuster
-                      onApply={handleApplyRgb}
-                      onReset={handleResetRgb}
-                    />
-                  ),
-                },
-                {
-                  label: "Kernel Customizado",
-                  content: (
-                    <CustomKernelEditor
-                      onApply={(matrix) => setCustomKernel(matrix)}
-                    />
-                  ),
-                },
-              ]}
-            />
-
-            <div className="mt-6 w-full max-w-md mx-auto text-center">
-              <label className="block mb-2 font-medium text-slate-700 dark:text-slate-200">
-                Intensidade do filtro: {intensity}%
-              </label>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={intensity}
-                onChange={(e) => setIntensity(Number(e.target.value))}
-                className="w-full accent-sky-600"
-              />
-            </div>
-            <div className="mt-4">
-              <button
-                onClick={handleRemoveFilter}
-                className="px-5 py-2 rounded-md bg-red-500 text-white font-semibold hover:bg-red-600 transition"
-              >
-                Remover Filtro
-              </button>
-            </div>
-
-            <div className="my-10 flex justify-center items-center gap-6">
-              {/* Canvas original */}
-              <div className="flex flex-col items-center">
-                <p className="mb-2 text-slate-600 dark:text-slate-300 text-sm">
-                  Original
-                </p>
-                <canvas
-                  ref={originalCanvasRef}
-                  className="rounded-md shadow-md w-full max-w-[600px] h-auto"
+            <div className="flex flex-col lg:flex-row w-full max-w-6xl mx-auto gap-8">
+              {/* LADO ESQUERDO: controles */}
+              <div className="flex-1">
+                <Tabs
+                  tabs={[
+                    {
+                      label: "Filtros",
+                      content: <FilterSelector onApply={handleApplyFilter} />,
+                    },
+                    {
+                      label: "RGB",
+                      content: (
+                        <RgbAdjuster
+                          onApply={handleApplyRgb}
+                          onReset={handleResetRgb}
+                        />
+                      ),
+                    },
+                    {
+                      label: "Kernel Customizado",
+                      content: (
+                        <CustomKernelEditor
+                          onApply={(matrix) => setCustomKernel(matrix)}
+                        />
+                      ),
+                    },
+                  ]}
                 />
+
+                {/* Range de intensidade */}
+                <div className="mt-6">
+                  <label className="block mb-2 text-slate-700 dark:text-slate-200">
+                    Intensidade do filtro: {intensity}%
+                  </label>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={intensity}
+                    onChange={(e) => setIntensity(Number(e.target.value))}
+                    className="w-full accent-sky-600"
+                  />
+                </div>
+
+                {/* Botão de remover filtro */}
+                <div className="mt-4">
+                  <button
+                    onClick={handleRemoveFilter}
+                    className="px-5 py-2 rounded-md bg-red-500 text-white font-semibold hover:bg-red-600 transition"
+                  >
+                    Remover Filtro
+                  </button>
+                </div>
               </div>
 
-              {/* Canvas filtrado */}
-              <div className="flex flex-col items-center">
-                <p className="mb-2 text-slate-600 dark:text-slate-300 text-sm">
-                  Com Filtro
-                </p>
+              {/* LADO DIREITO: canvas e botão de download */}
+              <div className="flex-1 flex flex-col items-center">
                 <canvas
                   ref={canvasRef}
                   className="rounded-md shadow-md w-full max-w-[600px] h-auto"
                 />
+                <button
+                  onClick={handleDownload}
+                  className="mt-6 px-5 py-2 rounded-md bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+                >
+                  Baixar imagem com filtro
+                </button>
               </div>
-            </div>
-            <div className="mt-6 pb-4">
-              <button
-                onClick={handleDownload}
-                className="px-5 py-2 rounded-md bg-green-600 text-white font-semibold hover:bg-green-700 transition"
-              >
-                Baixar imagem com filtro
-              </button>
             </div>
           </>
         )}

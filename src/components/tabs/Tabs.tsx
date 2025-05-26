@@ -13,7 +13,7 @@ const Tabs = ({ tabs }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <div className="w-screen max-w-4xl mt-8 text-center items-center">
+    <div className="w-full max-w-2xl mt-8 text-center flex flex-col">
       <div className="w-full">
         {tabs.map((tab, idx) => (
           <button

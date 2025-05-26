@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import Button from "../button/button";
+import Button from "../button/Button";
 
 const Hero = () => {
   return (
     <motion.section
-      className="bg-white lg:grid h-screen block lg:place-content-center dark:bg-slate-900"
+      className="bg-slate-50 lg:grid h-screen block lg:place-content-center dark:bg-slate-900"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}

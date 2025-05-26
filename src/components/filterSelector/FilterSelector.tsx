@@ -66,7 +66,7 @@ const FilterSelector: React.FC<FilterSelectorProps> = ({ onApply }) => {
   const [selectedFilter, setSelectedFilter] = useState("identity");
 
   return (
-    <div className="w-full max-w-2xl mx-auto my-4 px-4 bg-white dark:bg-slate-900 rounded-md">
+    <div className="w-full max-w-2xl mx-auto my-4 px-4 bg-slate-50 dark:bg-slate-900 rounded-md">
       <fieldset className="space-y-2">
         <legend className="text-lg font-semibold text-slate-800 dark:text-sky-50 mb-4">
           Escolha um filtro:
