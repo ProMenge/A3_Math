@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { kernels } from "../../utils/Kernels";
+import { kernels } from "../../utils/kernels";
 import CustomKernelEditor from "../customKernelEditor/CustomKernelEditor";
 import FilterSelector from "../filterSelector/FilterSelector";
 import RgbAdjuster from "../RgbAdjuster/RgbAdjuster";
@@ -10,9 +10,9 @@ const ImageUpload = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [imageNames, setImageNames] = useState<string[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>("identity");
-  const imageRef = useRef<HTMLImageElement>(null);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const originalCanvasRef = useRef<HTMLCanvasElement>(null);
+
   const [customKernel, setCustomKernel] = useState<number[][] | null>(null);
   const [intensity, setIntensity] = useState<number>(100);
   const [rgbFactors, setRgbFactors] = useState<[number, number, number]>([
@@ -76,7 +76,7 @@ const ImageUpload = () => {
   };
 
   useEffect(() => {
-    if (!canvasRef.current || !originalCanvasRef.current || !imageSrc) return;
+    if (!canvasRef.current || !imageSrc) return;
 
     const image = new Image();
     image.crossOrigin = "anonymous";
@@ -84,10 +84,7 @@ const ImageUpload = () => {
 
     image.onload = () => {
       const canvas = canvasRef.current!;
-      const originalCanvas = originalCanvasRef.current!;
       const ctx = canvas.getContext("2d")!;
-      const oCtx = originalCanvas.getContext("2d")!;
-
       const maxWidth = 600;
       const maxHeight = 600;
 
@@ -101,18 +98,11 @@ const ImageUpload = () => {
       const newWidth = image.width * scale;
       const newHeight = image.height * scale;
 
-      // Desenha imagem original
-      originalCanvas.width = newWidth;
-      originalCanvas.height = newHeight;
-      oCtx.drawImage(image, 0, 0, newWidth, newHeight);
-
-      // Aplica filtro
       canvas.width = newWidth;
       canvas.height = newHeight;
       ctx.drawImage(image, 0, 0, newWidth, newHeight);
 
       const imageData = ctx.getImageData(0, 0, newWidth, newHeight);
-
       const baseKernel = customKernel ?? kernels[selectedFilter];
       const identity = kernels["identity"];
 
@@ -129,7 +119,7 @@ const ImageUpload = () => {
 
       if (applyRgb) {
         resultData = applyRgbAdjustment(resultData, ...rgbFactors);
-        setApplyRgb(true);
+        setApplyRgb(true); // importante: evita loop infinito
       }
 
       ctx.putImageData(resultData, 0, 0);
