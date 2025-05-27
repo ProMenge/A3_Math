@@ -1,6 +1,7 @@
 import "./App.css";
-import Header from "./components/header/header";
-import Hero from "./components/hero/hero";
+import Footer from "./components/footer/Footer";
+import Header from "./components/header/Header";
+import Hero from "./components/hero/Hero";
 import ImageUpload from "./components/imageUpload/imageUpload";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <Header></Header>
       <Hero />
       <ImageUpload />
+      <Footer/>
     </>
   );
 }

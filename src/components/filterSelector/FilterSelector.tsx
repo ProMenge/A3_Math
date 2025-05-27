@@ -90,9 +90,9 @@ const FilterSelector: React.FC<FilterSelectorProps> = ({ onApply }) => {
                 onChange={() => setSelectedFilter(filter.name)}
                 className="sr-only"
               />
-              <span className="font-medium text-slate-800 dark:text-white">{filter.label}</span>
+              <span className="text-xs font-medium text-slate-800 dark:text-white">{filter.label}</span>
             </div>
-            <span className="text-sm text-slate-500 dark:text-slate-300">{filter.description}</span>
+            <span className="text-xs text-slate-500 dark:text-slate-300">{filter.description}</span>
           </label>
         ))}
       </fieldset>

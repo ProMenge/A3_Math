@@ -29,7 +29,9 @@ const Tabs = ({ tabs }: TabsProps) => {
           </button>
         ))}
       </div>
-      <div className="flex justify-center items-center min-h-[300px] border border-slate-300 dark:border-slate-700">{tabs[activeTab].content}</div>
+      <div className="flex justify-center items-center min-h-[300px] w-[480px] border border-slate-300 dark:border-slate-700">
+        {tabs[activeTab].content}
+      </div>
     </div>
   );
 };

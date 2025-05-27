@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { kernels } from "../../utils/kernels";
+import { kernels } from "../../utils/Kernels";
 import CustomKernelEditor from "../customKernelEditor/CustomKernelEditor";
 import FilterSelector from "../filterSelector/FilterSelector";
 import RgbAdjuster from "../RgbAdjuster/RgbAdjuster";
@@ -351,7 +351,7 @@ const ImageUpload = () => {
               </div>
 
               {/* LADO DIREITO: canvas e botão de download */}
-              <div className="flex-1 flex flex-col items-center">
+              <div className="flex-1 flex flex-col items-center mt-18">
                 <canvas
                   ref={canvasRef}
                   className="rounded-md shadow-md w-full max-w-[600px] h-auto"
