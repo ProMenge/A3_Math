@@ -21,7 +21,7 @@ const Header = () => {
 
               <div className="hidden sm:flex">
                 <Button variant="light">
-                  <a href="#upload">Sobre nós</a>
+                  <a href="#footer">Sobre nós</a>
                 </Button>
               </div>
             </div>

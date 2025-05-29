@@ -6,12 +6,14 @@ import ImageUpload from "./components/imageUpload/imageUpload";
 
 function App() {
   return (
-    <>
-      <Header></Header>
+    <div className="flex flex-col min-h-screen w-screen">
+      <Header />
       <Hero />
-      <ImageUpload />
-      <Footer/>
-    </>
+      <main className="flex-grow">
+        <ImageUpload />
+      </main>
+      <Footer />
+    </div>
   );
 }
 

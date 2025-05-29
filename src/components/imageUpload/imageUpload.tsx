@@ -229,7 +229,7 @@ const ImageUpload = () => {
       id="upload"
       className="w-full flex items-center bg-slate-50 dark:bg-slate-900 px-4 py-20 my-10"
     >
-      <div className="max-w-4xl mx-auto text-center flex flex-col items-center max-h-screen">
+      <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
         <motion.h2
           className="text-3xl font-bold text-slate-900 dark:text-white mb-6"
           initial={{ opacity: 0, y: 20 }}
@@ -295,7 +295,7 @@ const ImageUpload = () => {
 
         {imageSrc && (
           <>
-            <div className="flex flex-col lg:flex-row w-full max-w-6xl mx-auto gap-8">
+            <div className="flex flex-col lg:flex-row justify-center w-full max-w-md  md:max-w-6xl mx-auto gap-8 pb-10">
               {/* LADO ESQUERDO: controles */}
               <div className="flex-1">
                 <Tabs

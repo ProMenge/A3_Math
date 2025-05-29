@@ -27,7 +27,7 @@ const Hero = () => {
             </Button>
 
             <Button variant="light-border">
-              <a href="#upload">Sobre nós</a>
+              <a href="#footer">Sobre nós</a>
             </Button>
           </div>
         </div>
