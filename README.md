@@ -1,54 +1,77 @@
-# React + TypeScript + Vite
+# OCULAR
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Um editor de imagens interativo e acessível, desenvolvido com **React** e **Tailwind CSS**, que permite aplicar filtros personalizáveis usando **matrizes de convolução** e manipulação de **canais RGB**.
 
-Currently, two official plugins are available:
+Este projeto foi criado com fins educacionais e práticos, visando demonstrar o funcionamento de filtros aplicados em imagens com base em **kernels** (máscaras) definidos pelo usuário ou pré-configurados.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Funcionalidades
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+A aplicação permite o carregamento de uma imagem, e após carregada, o tratamento é feito através de **três abas principais**:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### 1. Filtros Pré-definidos
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Conjunto de filtros clássicos e variações dos mesmos, tendo:
+  - Desfoque
+  - Nitidez
+  - Relevo
+  - Detecção de Bordas
+- Cada filtro pode ter sua **intensidade ajustada** por sliders abaixo da seleção.
+- A aplicação pode ser feita após selecionar um dos filtros, e instantâneamente é aplicada na imagem escolhida.
+- A remoção dos filtros pode ser feita a qualquer momento, para retornar a imagem ao seu estado inicial.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 2. Controle de Canais RGB
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- Três sliders independentes permitem ajustar a intensidade dos canais:
+  - 🔴 Vermelho
+  - 🟢 Verde
+  - 🔵 Azul
+- Perfeito para efeitos estilizados e manipulação básica de cor.
+- Os sliders podem ser ajustados juntamente com a aplicação de filtros.
+
+### 3. Editor de Kernel Customizado
+
+- Interface com um **grid 3x3** onde o usuário pode digitar livremente os valores do kernel (máscara de convolução).
+- Permite aplicar **filtros personalizados** com base em qualquer matriz definida.
+- Ideal para fins educativos ou testes de novos efeitos visuais.
+
+---
+
+## Tecnologias Utilizadas
+
+- **React.js** – Biblioteca para construção de interfaces reativas.
+- **Tailwind CSS** – Framework utilitário para estilização moderna.
+- **Framer Motion** – Biblioteca de animações usada para interações visuais suaves.
+- **TypeScript** – Linguagem capaz de garantir a funcionalidade eficiente do site.
+- **Vite** – Ferramenta de organização ágil.
+- **Eslint** – Ferramenta para fatoração total do projeto.
+
+---
+
+## Instalação e Execução
+
+### Pré-requisitos
+
+- Node.js (v18 ou superior)
+- npm
+
+### Link para acessar o site funcional
+
+🔗 *[Link para a o github pages]*
+
+### Passos para rodar localmente:
+
+```bash
+# Extraia o .zip em uma pasta local
+
+# Abra a pasta em seu VSCODE
+
+# Com o terminal aberto, instale as dependências
+npm install
+
+# Inicie o servidor de desenvolvimento
+npm run dev
+
+# Acesse no navegador
+http://localhost:5173
